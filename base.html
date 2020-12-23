@@ -1,0 +1,29 @@
+<html>
+
+<head>
+    {% if title %}
+    <title>{{ title }} - Microblog</title>
+    {% else %}
+    <title>Welcome to Microblog</title>
+    {% endif %}
+</head>
+
+<body>
+    <div>
+        AI Career Counseling Pakistan:
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('login') }}">Register</a>
+        <a href="{{ url_for('login') }}">Assessments</a>
+        <a href="{{ url_for('login') }}">About us</a>
+    </div>
+    <hr> {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %} {% endwith %} {% block content %}{% endblock %}
+</body>
+
+</html>
