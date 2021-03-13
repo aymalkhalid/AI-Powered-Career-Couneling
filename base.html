@@ -1,29 +1,72 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    {% if title %}
-    <title>{{ title }} - Microblog</title>
-    {% else %}
-    <title>Welcome to Microblog</title>
-    {% endif %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='theme.css') }}" rel="stylesheet">
 </head>
 
 <body>
-    <div>
-        AI Career Counseling Pakistan:
-        <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('login') }}">Login</a>
-        <a href="{{ url_for('login') }}">Register</a>
-        <a href="{{ url_for('login') }}">Assessments</a>
-        <a href="{{ url_for('login') }}">About us</a>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">AICC</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+
+                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                    {%if not current_user.is_authenticated%}
+                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                    {%endif%} {%if current_user.is_authenticated%}
+                    <li><a href="{{ url_for('main.ask') }}">Ask Question</a></li>
+                    {%endif%} {%if current_user.is_authenticated and current_user.expert%}
+                    <li><a href="{{ url_for('main.unanswered') }}">Unanswered Question</a></li>
+                    {%endif%} {%if current_user.is_authenticated and current_user.admin%}
+                    <li><a href="{{ url_for('main.users') }}">User Setup</a></li>
+                    {%endif%} {%if current_user.is_authenticated%}
+                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    {%endif%}
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div class="container theme-showcase" role="main">
+
+        {% block content %}{% endblock %}
+
     </div>
-    <hr> {% with messages = get_flashed_messages() %} {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %} {% endwith %} {% block content %}{% endblock %}
+    <!-- /container -->
+    <script>
+        window.watsonAssistantChatOptions = {
+            integrationID: "45a8c0ba-2bf2-425e-b3c6-b98035b6f6d5", // The ID of this integration.
+            region: "us-south", // The region your integration is hosted in.
+            serviceInstanceID: "3387fc01-4a6b-4264-ad97-15ad096fb477", // The ID of your service instance.
+            onLoad: function(instance) {
+                instance.render();
+            }
+        };
+        setTimeout(function() {
+            const t = document.createElement('script');
+            t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js";
+            document.head.appendChild(t);
+        });
+    </script>
+
 </body>
 
 </html>
